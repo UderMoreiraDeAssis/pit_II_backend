@@ -16,7 +16,7 @@ timeEntrySchema.pre('save', function (next) {
 });
 
 timeEntrySchema.path('startTime').validate(function (value) {
-  return value <= this.endTime;
+  return !this.endTime || value <= this.endTime;
 }, 'Start time must be before end time.');
 
 module.exports = mongoose.model('TimeEntry', timeEntrySchema);

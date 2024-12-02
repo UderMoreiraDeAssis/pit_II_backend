@@ -22,7 +22,7 @@ module.exports = {
         html: options.html || null, // Corpo em HTML, se fornecido
       };
 
-      const info = await transporter.sendMail(mailOptions);
+      const info = await transport.sendMail(mailOptions);
       console.log('Email enviado:', info.messageId);
       return info;
     } catch (error) {

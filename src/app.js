@@ -11,17 +11,21 @@ const app = express();
 app.use(express.json());
 
 // Configure CORS
-const allowedOrigins = [process.env.FRONT_WHITELIST];
+const allowedOrigins = process.env.FRONT_WHITELIST ? process.env.FRONT_WHITELIST.split(',') : [];
 
 app.use(
   cors({
     origin: function (origin, callback) {
+      const allowedOrigins = ['http://localhost:3000']; // Lista de origens permitidas
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
       }
     },
+    credentials: true, // Permite envio de cookies, se necessário
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos permitidos
+    allowedHeaders: ['Content-Type', 'Authorization'], // Cabeçalhos permitidos
   })
 );
 
@@ -39,7 +43,9 @@ app.use('/api/reports', require('./routes/reportRoutes'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI, {
+    // strictPopulate: false,
+  })
   .then(() => {
     console.log('Connected to MongoDB');
     // Create unique index on email field
