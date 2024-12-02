@@ -13,6 +13,7 @@ app.use(cors());
 app.use('/api/users', require('./routes/userRoutes'));
 
 // MongoDB Connection
+//
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
