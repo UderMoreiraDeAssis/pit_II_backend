@@ -23,17 +23,27 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Get User by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) res.json(user);
+    else res.status(404).json({ error: 'User not found' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Update User
 router.put('/:id', async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    res.json(user);
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true } // Retorna o documento atualizado
+    );
+    if (updatedUser) res.json(updatedUser);
+    else res.status(404).json({ error: 'User not found' });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -42,11 +52,9 @@ router.put('/:id', async (req, res) => {
 // Delete User
 router.delete('/:id', async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    res.json({ message: 'User deleted successfully' });
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (deletedUser) res.json({ message: 'User deleted' });
+    else res.status(404).json({ error: 'User not found' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
