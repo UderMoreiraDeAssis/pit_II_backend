@@ -11,12 +11,11 @@ const app = express();
 app.use(express.json());
 
 // Configure CORS
-const allowedOrigins = process.env.FRONT_WHITELIST ? process.env.FRONT_WHITELIST.split(',') : [];
+const allowedOrigins = process.env.FRONT_WHITELIST;
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      const allowedOrigins = ['http://localhost:3000']; // Lista de origens permitidas
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
